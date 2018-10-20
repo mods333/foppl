@@ -1,0 +1,26 @@
+(ns foppl-compiler.sandbox
+  (:require [clojure.set :as set]
+            [anglican.runtime :refer :all]
+            [clojure.walk :refer :all]
+            [foppl-compiler.core :refer :all]
+            )
+  (:use [anglican core runtime emit stat])
+  )
+
+
+(defquery test_ang1 []
+
+  (let [mu (sample* (normal 1 (sqrt 5)))
+                   sigma (sqrt 2)
+                   lik (normal mu sigma)]
+               (observe* lik 8)
+               (observe* lik 9)
+               mu)
+
+  )
+
+(def rmh-samples
+  (take 10000000
+        (doquery :lmh test_ang1 [])))
+
+(map :result rmh-samples)
